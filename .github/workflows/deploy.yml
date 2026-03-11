@@ -10,9 +10,12 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     permissions: {}
+    env:
+      SERVER_HOST: ${{ secrets.SERVER_HOST }}
 
     steps:
       - name: Deploy via SSH
+        if: ${{ env.SERVER_HOST != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
