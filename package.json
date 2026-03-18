@@ -7,8 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "env:check": "node scripts/check-required-env.mjs",
     "prisma:generate": "prisma generate",
+    "db:safety-check": "node scripts/predeploy-db-safety.mjs",
     "smoke:test": "node scripts/smoke-test.mjs",
+    "test:e2e": "playwright test",
     "verify:all": "node scripts/verify-all.mjs",
     "branch-protection:setup": "powershell -ExecutionPolicy Bypass -File ./scripts/setup-branch-protection.ps1 -Owner thomasbontrager -Repo shipforge-workflows -Branch main",
     "branch-protection:check": "powershell -ExecutionPolicy Bypass -File ./scripts/check-branch-protection.ps1 -Owner thomasbontrager -Repo shipforge-workflows -Branch main",
@@ -29,6 +32,7 @@
     "@types/react-dom": "18.3.7",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.0",
+    "@playwright/test": "1.53.1",
     "prisma": "6.19.2",
     "typescript": "5.9.3"
   }

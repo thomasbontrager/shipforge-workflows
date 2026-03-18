@@ -1,0 +1,73 @@
+name: Health Monitor
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  monitor:
+    name: Monitor health endpoint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Validate configuration
+        run: |
+          if [ -z "${HEALTHCHECK_URL}" ]; then
+            echo "HEALTHCHECK_URL secret is required."
+            exit 1
+          fi
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+
+      - name: Check health endpoint
+        id: health
+        run: |
+          set -euo pipefail
+          code=$(curl -sS -o /tmp/health-body.txt -w "%{http_code}" --max-time 15 "${HEALTHCHECK_URL}")
+          echo "status_code=$code" >> "$GITHUB_OUTPUT"
+          if [ "$code" -ne 200 ]; then
+            echo "Health check failed with status $code"
+            cat /tmp/health-body.txt || true
+            exit 1
+          fi
+        env:
+          HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
+
+      - name: Open alert issue on failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = "[ALERT] Health endpoint failing";
+            const query = `repo:${context.repo.owner}/${context.repo.repo} is:issue is:open in:title \"${title}\"`;
+            const found = await github.rest.search.issuesAndPullRequests({ q: query });
+
+            const body = [
+              `Health monitor workflow failed.`,
+              `Run: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              `Triggered at: ${new Date().toISOString()}`
+            ].join("\n");
+
+            if (found.data.items.length > 0) {
+              const issueNumber = found.data.items[0].number;
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issueNumber,
+                body,
+              });
+            } else {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ["alert", "operations"],
+              });
+            }
