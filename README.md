@@ -46,9 +46,9 @@ Recommended GitHub branch protection settings and required status checks are doc
 
 Required check contexts should be:
 
-- `CI / Verify (Node 20) (pull_request)`
-- `CI / Verify (Node 22) (pull_request)`
-- `CI / Verify (Postgres strict health) (pull_request)`
+- `Verify (Node 20)`
+- `Verify (Node 22)`
+- `Verify (Postgres strict health)`
 
 Apply them automatically with:
 
