@@ -43,9 +43,9 @@ function Get-ProtectionPayload {
     required_status_checks = @{
       strict   = $true
       contexts = @(
-        "CI / Verify (Node 20) (pull_request)",
-        "CI / Verify (Node 22) (pull_request)",
-        "CI / Verify (Postgres strict health) (pull_request)"
+        "Verify (Node 20)",
+        "Verify (Node 22)",
+        "Verify (Postgres strict health)"
       )
     }
     enforce_admins = $true
@@ -102,9 +102,9 @@ try {
 
   Write-Host "Branch protection applied successfully." -ForegroundColor Green
   Write-Host "Required checks:" -ForegroundColor Green
-  Write-Host "- CI / Verify (Node 20) (pull_request)"
-  Write-Host "- CI / Verify (Node 22) (pull_request)"
-  Write-Host "- CI / Verify (Postgres strict health) (pull_request)"
+  Write-Host "- Verify (Node 20)"
+  Write-Host "- Verify (Node 22)"
+  Write-Host "- Verify (Postgres strict health)"
 } finally {
   if (Test-Path $jsonPath) {
     Remove-Item $jsonPath -Force
