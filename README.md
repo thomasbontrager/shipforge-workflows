@@ -44,6 +44,12 @@ SMOKE_BASE_URL=http://127.0.0.1:3000 SMOKE_STRICT_HEALTH_OK=true npm run smoke:t
 
 Recommended GitHub branch protection settings and required status checks are documented in [.github/branch-protection.md](.github/branch-protection.md).
 
+Required check contexts should be:
+
+- `CI / Verify (Node 20) (pull_request)`
+- `CI / Verify (Node 22) (pull_request)`
+- `CI / Verify (Postgres strict health) (pull_request)`
+
 Apply them automatically with:
 
 ```powershell

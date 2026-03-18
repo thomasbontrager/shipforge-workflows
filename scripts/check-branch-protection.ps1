@@ -84,9 +84,9 @@ $GhExe = Resolve-GhExecutable
 Assert-Authenticated -GhExecutable $GhExe
 
 $requiredContexts = @(
-  "CI / Verify (Node 20)",
-  "CI / Verify (Node 22)",
-  "CI / Verify (Postgres strict health)"
+  "CI / Verify (Node 20) (pull_request)",
+  "CI / Verify (Node 22) (pull_request)",
+  "CI / Verify (Postgres strict health) (pull_request)"
 )
 
 $endpoint = "repos/$Owner/$Repo/branches/$Branch/protection"

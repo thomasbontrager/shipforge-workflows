@@ -17,9 +17,9 @@ Use this as a copy/paste checklist for protecting `main` in GitHub.
 
 After the CI workflow runs at least once, add these checks as required:
 
-- `CI / Verify (Node 20)`
-- `CI / Verify (Node 22)`
-- `CI / Verify (Postgres strict health)`
+- `CI / Verify (Node 20) (pull_request)`
+- `CI / Verify (Node 22) (pull_request)`
+- `CI / Verify (Postgres strict health) (pull_request)`
 
 ## Optional hardened settings
 
