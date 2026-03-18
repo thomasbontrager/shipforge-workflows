@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
 

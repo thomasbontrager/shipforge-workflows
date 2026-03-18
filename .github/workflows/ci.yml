@@ -1,0 +1,169 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-matrix:
+    name: Verify (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [20, 22]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run prisma:generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Start app for smoke tests
+        run: |
+          npm run dev -- --port 3100 > /tmp/next-dev.log 2>&1 &
+          echo $! > /tmp/next-dev.pid
+
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:3100/login >/dev/null; then
+              echo "App is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App failed to start in time"
+          cat /tmp/next-dev.log || true
+          exit 1
+
+      - name: Smoke tests
+        env:
+          SMOKE_BASE_URL: http://127.0.0.1:3100
+        run: npm run smoke:test
+
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -f /tmp/next-dev.pid ]; then
+            kill $(cat /tmp/next-dev.pid) || true
+          fi
+
+      - name: Dump app log on failure
+        if: failure()
+        run: cat /tmp/next-dev.log || true
+
+      - name: Upload smoke log artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-log-node-${{ matrix.node-version }}
+          path: /tmp/next-dev.log
+          if-no-files-found: ignore
+
+  verify-postgres:
+    name: Verify (Postgres strict health)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: shipforge
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d shipforge"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npm run prisma:generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Start app for strict smoke tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/shipforge
+          NEXTAUTH_URL: http://127.0.0.1:3100
+          NEXTAUTH_SECRET: ci-secret-not-for-production
+        run: |
+          npm run dev -- --port 3100 > /tmp/next-dev-postgres.log 2>&1 &
+          echo $! > /tmp/next-dev-postgres.pid
+
+      - name: Wait for app to be ready
+        run: |
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:3100/login >/dev/null; then
+              echo "App is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "App failed to start in time"
+          cat /tmp/next-dev-postgres.log || true
+          exit 1
+
+      - name: Strict smoke tests with database
+        env:
+          SMOKE_BASE_URL: http://127.0.0.1:3100
+          SMOKE_STRICT_HEALTH_OK: "true"
+        run: npm run smoke:test
+
+      - name: Stop app
+        if: always()
+        run: |
+          if [ -f /tmp/next-dev-postgres.pid ]; then
+            kill $(cat /tmp/next-dev-postgres.pid) || true
+          fi
+
+      - name: Dump app log on failure
+        if: failure()
+        run: cat /tmp/next-dev-postgres.log || true
+
+      - name: Upload postgres smoke log artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-log-postgres
+          path: /tmp/next-dev-postgres.log
+          if-no-files-found: ignore
