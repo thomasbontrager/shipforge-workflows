@@ -176,10 +176,9 @@ jobs:
       - name: Auth E2E tests
         env:
           DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/shipforge
-          NEXTAUTH_URL: http://127.0.0.1:3200
+          NEXTAUTH_URL: http://127.0.0.1:3100
           NEXTAUTH_SECRET: ci-secret-not-for-production
-          E2E_PORT: "3200"
-          E2E_BASE_URL: http://127.0.0.1:3200
+          E2E_BASE_URL: http://127.0.0.1:3100
         run: npm run test:e2e
 
       - name: Stop app

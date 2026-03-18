@@ -11,15 +11,17 @@ export default defineConfig({
     baseURL,
     trace: "retain-on-failure",
   },
-  webServer: {
-    command: `npm run dev -- --port ${port}`,
-    url: `${baseURL}/login`,
-    timeout: 120_000,
-    reuseExistingServer: !process.env.CI,
-    env: {
-      ...process.env,
-      NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? baseURL,
-      NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ?? "local-e2e-secret",
-    },
-  },
+  webServer: process.env.CI
+    ? undefined
+    : {
+        command: `npm run dev -- --port ${port}`,
+        url: `${baseURL}/login`,
+        timeout: 120_000,
+        reuseExistingServer: true,
+        env: {
+          ...process.env,
+          NEXTAUTH_URL: process.env.NEXTAUTH_URL ?? baseURL,
+          NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ?? "local-e2e-secret",
+        },
+      },
 });
