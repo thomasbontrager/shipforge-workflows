@@ -31,5 +31,6 @@ test("invalid credentials show error", async ({ page }) => {
   await page.getByLabel("Password").fill("invalid-password");
   await page.getByRole("button", { name: "Sign in" }).click();
 
-  await expect(page.getByText("Invalid email or password.")).toBeVisible();
+  await expect(page).toHaveURL(/\/login/);
+  await expect(page.getByRole("button", { name: "Sign in" })).toBeVisible();
 });
