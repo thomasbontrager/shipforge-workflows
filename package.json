@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@prisma/client": "6.19.2",
-    "bcryptjs": "2.4.3",
+    "bcryptjs": "3.0.3",
     "next": "16.2.0",
     "next-auth": "4.24.13",
     "react": "19.2.4",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",
-    "@types/bcryptjs": "2.4.6",
+    "@types/bcryptjs": "3.0.0",
     "@types/node": "25.5.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
