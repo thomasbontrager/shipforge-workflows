@@ -98,6 +98,7 @@ npm run branch-protection:check:json
 - CodeQL analysis workflow: [.github/workflows/codeql.yml](.github/workflows/codeql.yml)
 - Scheduled health alert workflow: [.github/workflows/health-monitor.yml](.github/workflows/health-monitor.yml)
 - Manual predeploy gate workflow: [.github/workflows/predeploy-guardrails.yml](.github/workflows/predeploy-guardrails.yml)
+- Major dependency migration plan: [docs/dependency-migrations.md](docs/dependency-migrations.md)
 
 ### Required secrets for operations workflows
 
