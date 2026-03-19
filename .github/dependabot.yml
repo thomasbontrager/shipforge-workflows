@@ -10,6 +10,29 @@ updates:
     labels:
       - dependencies
       - security
+    ignore:
+      # React / React DOM: major migration requires Next.js compatibility planning.
+      # See docs/dependency-migrations.md before opening a major bump PR.
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@types/react-dom"
+        update-types: ["version-update:semver-major"]
+      # Prisma / @prisma/client: major migration has breaking changes.
+      # See docs/dependency-migrations.md before opening a major bump PR.
+      - dependency-name: "prisma"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@prisma/client"
+        update-types: ["version-update:semver-major"]
+      # ESLint: major migration requires config compatibility work.
+      # See docs/dependency-migrations.md before opening a major bump PR.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint-config-next"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: "/"
