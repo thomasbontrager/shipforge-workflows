@@ -30,7 +30,7 @@
     "@types/node": "20.19.37",
     "@types/react": "18.3.28",
     "@types/react-dom": "18.3.7",
-    "eslint": "9.39.4",
+    "eslint": "10.0.3",
     "eslint-config-next": "16.2.0",
     "@playwright/test": "1.53.1",
     "prisma": "6.19.2",
