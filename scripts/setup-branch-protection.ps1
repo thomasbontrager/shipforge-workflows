@@ -43,7 +43,6 @@ function Get-ProtectionPayload {
     required_status_checks = @{
       strict   = $true
       contexts = @(
-        "Verify (Node 20)",
         "Verify (Node 22)",
         "Verify (Postgres strict health)"
       )
@@ -102,7 +101,6 @@ try {
 
   Write-Host "Branch protection applied successfully." -ForegroundColor Green
   Write-Host "Required checks:" -ForegroundColor Green
-  Write-Host "- Verify (Node 20)"
   Write-Host "- Verify (Node 22)"
   Write-Host "- Verify (Postgres strict health)"
 } finally {

@@ -84,7 +84,6 @@ $GhExe = Resolve-GhExecutable
 Assert-Authenticated -GhExecutable $GhExe
 
 $requiredContexts = @(
-  "Verify (Node 20)",
   "Verify (Node 22)",
   "Verify (Postgres strict health)"
 )
