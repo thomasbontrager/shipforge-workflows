@@ -18,7 +18,7 @@
     "branch-protection:check:json": "powershell -ExecutionPolicy Bypass -File ./scripts/check-branch-protection.ps1 -Owner thomasbontrager -Repo shipforge-workflows -Branch main -Json"
   },
   "dependencies": {
-    "@prisma/client": "6.19.2",
+    "@prisma/client": "7.5.0",
     "bcryptjs": "2.4.3",
     "next": "16.2.0",
     "next-auth": "4.24.13",
