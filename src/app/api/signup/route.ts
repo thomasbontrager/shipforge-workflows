@@ -9,6 +9,8 @@ import {
   logInfo,
 } from "@/lib/observability";
 
+export const runtime = "nodejs";
+
 /** Allow at most 10 signup attempts per IP per 15-minute window. */
 const RATE_LIMIT_OPTIONS = { maxRequests: 10, windowMs: 15 * 60 * 1000 };
 

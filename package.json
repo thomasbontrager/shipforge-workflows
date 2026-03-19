@@ -18,22 +18,25 @@
     "branch-protection:check:json": "powershell -ExecutionPolicy Bypass -File ./scripts/check-branch-protection.ps1 -Owner thomasbontrager -Repo shipforge-workflows -Branch main -Json"
   },
   "dependencies": {
-    "@prisma/client": "6.19.2",
-    "bcryptjs": "3.0.3",
+    "@prisma/adapter-pg": "7.5.0",
+    "@prisma/client": "7.5.0",
+    "bcryptjs": "2.4.3",
     "next": "16.2.0",
     "next-auth": "4.24.13",
-    "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "pg": "8.14.1",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",
-    "@types/bcryptjs": "3.0.0",
-    "@types/node": "25.5.0",
-    "@types/react": "19.2.14",
-    "@types/react-dom": "19.2.3",
+    "@types/bcryptjs": "2.4.6",
+    "@types/node": "20.19.37",
+    "@types/react": "18.3.28",
+    "@types/react-dom": "18.3.7",
+    "dotenv": "17.2.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.0",
-    "prisma": "6.19.2",
+    "prisma": "7.5.0",
     "typescript": "5.9.3"
   }
 }

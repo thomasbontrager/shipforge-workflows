@@ -7,6 +7,8 @@ import {
   logInfo,
 } from "@/lib/observability";
 
+export const runtime = "nodejs";
+
 const DB_TIMEOUT_MS = 2000;
 const FAILURE_THRESHOLD = 3;
 const CIRCUIT_OPEN_MS = 30000;
