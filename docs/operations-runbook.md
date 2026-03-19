@@ -27,6 +27,18 @@ What this covers:
 - `npm run smoke:test`
 - `npm run branch-protection:check`
 
+Run environment guardrails in CI mode:
+
+```bash
+CHECK_ENV_MODE=ci DATABASE_URL=postgresql://placeholder:placeholder@127.0.0.1:5432/placeholder NEXTAUTH_URL=http://127.0.0.1:3000 NEXTAUTH_SECRET=ci-secret npm run env:check
+```
+
+Run auth end-to-end tests:
+
+```bash
+npm run test:e2e
+```
+
 Skip branch protection check when needed:
 
 ```bash
@@ -75,9 +87,26 @@ npm run branch-protection:check:json
 
 Required checks for `main`:
 
-- `CI / Verify (Node 20)`
-- `CI / Verify (Node 22)`
-- `CI / Verify (Postgres strict health)`
+- `Verify (Node 20)`
+- `Verify (Node 22)`
+- `Verify (Postgres strict health)`
+
+## Alerting
+
+Scheduled health monitoring is configured in `.github/workflows/health-monitor.yml`.
+
+- Set `HEALTHCHECK_URL` repository secret to the production health URL.
+- Workflow runs every 30 minutes and opens or updates an alert issue when health is not `200`.
+
+## Pre-deploy DB safety
+
+Run before production deploy:
+
+```bash
+BACKUP_CONFIRMED=true DATABASE_URL=postgresql://... npm run db:safety-check
+```
+
+This command checks that backup confirmation is explicit and validates Prisma migration status.
 
 ## Incident triage
 

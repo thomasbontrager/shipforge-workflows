@@ -29,6 +29,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Environment guardrails
+        env:
+          CHECK_ENV_MODE: ci
+          DATABASE_URL: postgresql://placeholder:placeholder@127.0.0.1:5432/placeholder
+          NEXTAUTH_URL: http://127.0.0.1:3100
+          NEXTAUTH_SECRET: ci-secret-not-for-production
+        run: npm run env:check
+
       - name: Generate Prisma client
         run: npm run prisma:generate
 
@@ -112,8 +120,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Environment guardrails
+        env:
+          CHECK_ENV_MODE: ci
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/shipforge
+          NEXTAUTH_URL: http://127.0.0.1:3100
+          NEXTAUTH_SECRET: ci-secret-not-for-production
+        run: npm run env:check
+
       - name: Generate Prisma client
         run: npm run prisma:generate
+
+      - name: Sync Prisma schema
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/shipforge
+        run: npx prisma db push
 
       - name: Lint
         run: npm run lint
@@ -148,6 +169,17 @@ jobs:
           SMOKE_BASE_URL: http://127.0.0.1:3100
           SMOKE_STRICT_HEALTH_OK: "true"
         run: npm run smoke:test
+
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Auth E2E tests
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@127.0.0.1:5432/shipforge
+          NEXTAUTH_URL: http://127.0.0.1:3100
+          NEXTAUTH_SECRET: ci-secret-not-for-production
+          E2E_BASE_URL: http://127.0.0.1:3100
+        run: npm run test:e2e
 
       - name: Stop app
         if: always()

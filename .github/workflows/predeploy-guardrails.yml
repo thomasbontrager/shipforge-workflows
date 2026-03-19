@@ -1,0 +1,42 @@
+name: Predeploy Guardrails
+
+on:
+  workflow_dispatch:
+    inputs:
+      backup_confirmed:
+        description: "Confirm that a current database backup exists"
+        required: true
+        type: boolean
+
+jobs:
+  predeploy-checks:
+    name: Predeploy checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate production environment variables
+        env:
+          CHECK_ENV_MODE: production
+          DATABASE_URL: ${{ secrets.PREDEPLOY_DATABASE_URL }}
+          NEXTAUTH_URL: ${{ secrets.PREDEPLOY_NEXTAUTH_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.PREDEPLOY_NEXTAUTH_SECRET }}
+        run: npm run env:check
+
+      - name: Validate backup and migration safety
+        env:
+          BACKUP_CONFIRMED: ${{ inputs.backup_confirmed }}
+          DATABASE_URL: ${{ secrets.PREDEPLOY_DATABASE_URL }}
+        run: npm run db:safety-check

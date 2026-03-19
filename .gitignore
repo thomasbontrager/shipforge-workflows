@@ -25,5 +25,9 @@ pnpm-debug.log*
 # local tooling cache
 .tools/
 
+# playwright artifacts
+playwright-report/
+test-results/
+
 # typescript
 *.tsbuildinfo
