@@ -2,6 +2,9 @@
   "name": "shipforge-workflows",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=20.19.0 <21 || >=22.12.0 <23 || >=24.0.0"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -18,7 +21,7 @@
     "branch-protection:check:json": "powershell -ExecutionPolicy Bypass -File ./scripts/check-branch-protection.ps1 -Owner thomasbontrager -Repo shipforge-workflows -Branch main -Json"
   },
   "dependencies": {
-    "@prisma/client": "6.19.2",
+    "@prisma/client": "7.5.0",
     "bcryptjs": "3.0.3",
     "next": "16.2.0",
     "next-auth": "4.24.13",
@@ -33,7 +36,7 @@
     "@types/react-dom": "19.2.3",
     "eslint": "9.39.4",
     "eslint-config-next": "16.2.0",
-    "prisma": "6.19.2",
+    "prisma": "7.5.0",
     "typescript": "5.9.3"
   }
 }
