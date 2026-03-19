@@ -17,6 +17,9 @@
     "branch-protection:check": "powershell -ExecutionPolicy Bypass -File ./scripts/check-branch-protection.ps1 -Owner thomasbontrager -Repo shipforge-workflows -Branch main",
     "branch-protection:check:json": "powershell -ExecutionPolicy Bypass -File ./scripts/check-branch-protection.ps1 -Owner thomasbontrager -Repo shipforge-workflows -Branch main -Json"
   },
+  "engines": {
+    "node": ">=20.9.0"
+  },
   "dependencies": {
     "@prisma/client": "6.19.2",
     "bcryptjs": "3.0.3",
