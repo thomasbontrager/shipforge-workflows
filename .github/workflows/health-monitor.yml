@@ -17,16 +17,20 @@ jobs:
 
     steps:
       - name: Validate configuration
+        id: config
         run: |
           if [ -z "${HEALTHCHECK_URL}" ]; then
-            echo "HEALTHCHECK_URL secret is required."
-            exit 1
+            echo "HEALTHCHECK_URL secret is not configured. Skipping health check."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
           fi
         env:
           HEALTHCHECK_URL: ${{ secrets.HEALTHCHECK_URL }}
 
       - name: Check health endpoint
         id: health
+        if: steps.config.outputs.skip == 'false'
         run: |
           set -euo pipefail
           code=$(curl -sS -o /tmp/health-body.txt -w "%{http_code}" --max-time 15 "${HEALTHCHECK_URL}")
